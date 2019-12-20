@@ -3,8 +3,7 @@ unit Common.Barcode.EAN13;
 interface
 uses
   Common.Barcode,
-  Common.Barcode.IBarcode,
-  FMX.Objects, System.Classes;
+  Common.Barcode.IBarcode;
 
 type
   TEAN13 = class(TInterfacedObject, IBarcode)
@@ -42,8 +41,7 @@ implementation
 
 uses
   System.SysUtils,
-  System.StrUtils,
-  System.Character, FMX.Controls;
+  System.StrUtils;
 
 { TEAN13 }
 
