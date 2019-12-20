@@ -1,4 +1,4 @@
-unit Common.Barcode.EAN13;
+unit Common.Barcode.EAN8;
 
 interface
 uses
@@ -6,9 +6,8 @@ uses
   Common.Barcode.IBarcode;
 
 type
-  TEAN13 = class(TInterfacedObject, IBarcode)
+  TEAN8 = class(TInterfacedObject, IBarcode)
   strict private const
-    Patterns:   array of string = ['AAAAAA',  'AABABB',  'AABBAB',  'AABBBA',  'ABAABB',  'ABBAAB',  'ABBBAA',  'ABABAB',  'ABABBA',  'ABBABA'];
     SequencesA: array of string = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
     SequencesB: array of string = ['0100111', '0110011', '0011011', '0100001', '0011101', '0111001', '0000101', '0010001', '0001001', '0010111'];
     SequenceStart = '101';
@@ -36,21 +35,15 @@ type
     function GetSVG: string;
     function GetThickness(const Width: single): single;
   end;
-
 implementation
 
 uses
   System.SysUtils,
   System.StrUtils;
 
-{ TEAN13 }
+{ TEAN8 }
 
-function TEAN13.GetThickness(const Width: single): single;
-begin
-  result := Width * 1.2 / 99;
-end;
-
-function TEAN13.CheckCRC(const ARawData: string): boolean;
+function TEAN8.CheckCRC(const ARawData: string): boolean;
 var
   RawCRC: integer;
   CRC: integer;
@@ -60,20 +53,7 @@ begin
   result := RawCRC = CRC;
 end;
 
-function TEAN13.Get1(const Position, Length: single): string;
-begin
-  result := format('%s L %s, %s', [Get0(Position),
-                                   Position.ToString.Replace(',','.'),
-                                   Length.ToString.Replace(',','.')
-                                  ]);
-end;
-
-function TEAN13.Get0(const Position: single): string;
-begin
-  result := format('M %s, 0', [Position.ToString.Replace(',','.')]);
-end;
-
-procedure TEAN13.Encode;
+procedure TEAN8.Encode;
 begin
   FEncodeData := SequenceStart;
   EncodeL(FEncodeData, FRawData);
@@ -82,49 +62,55 @@ begin
   FEncodeData := FEncodeData + SequenceStop;
 end;
 
-procedure TEAN13.EncodeL(var AEncodeData: string; const ARawData: string);
+procedure TEAN8.EncodeL(var AEncodeData: string; const ARawData: string);
 var
-  Pattern: string;
   Sequence: string;
   I: Integer;
 begin
-  Pattern := Patterns[string(ARawData[1]).ToInteger];
-
-  for I := 1 to 6 do begin
-    if Pattern[I] = 'A' then
-      Sequence := SequencesA[string(ARawData[I+1]).ToInteger]
-    else
-      Sequence := SequencesB[string(ARawData[I+1]).ToInteger];
-
+  for I := 0 to 3 do begin
+    Sequence := SequencesA[string(ARawData[I+1]).ToInteger];
     AEncodeData := AEncodeData + Sequence;
   end;
 end;
 
-procedure TEAN13.EncodeR(var AEncodeData: string; const ARawData: string);
+procedure TEAN8.EncodeR(var AEncodeData: string; const ARawData: string);
 var
   Sequence: string;
   I: integer;
 begin
-  for I := 8 to ARawData.Length do begin
+  for I := 5 to ARawData.Length do begin
     Sequence := ReverseString(SequencesB[string(ARawData[I]).ToInteger]);
     AEncodeData := AEncodeData + Sequence;
   end;
 
   //Если нет контрольной суммы - добавляем
-  if ARawData.Length = 12 then begin
+  if ARawData.Length = 7 then begin
     Sequence := ReverseString(SequencesB[GetCRC(FRawData)]);
     AEncodeData := AEncodeData + Sequence;
   end;
 end;
 
-function TEAN13.GetCRC(const ARawData: string): integer;
+function TEAN8.Get0(const Position: single): string;
+begin
+  result := format('M %s, 0', [Position.ToString.Replace(',','.')]);
+end;
+
+function TEAN8.Get1(const Position, Length: single): string;
+begin
+  result := format('%s L %s, %s', [Get0(Position),
+                                   Position.ToString.Replace(',','.'),
+                                   Length.ToString.Replace(',','.')
+                                  ]);
+end;
+
+function TEAN8.GetCRC(const ARawData: string): integer;
 var
   Value: TArray<Char>;
   Even: integer;
   Odd: integer;
   I: Integer;
 begin
-  if ARawData.Length = 13
+  if ARawData.Length = 8
     then Value := ReverseString(ARawData).Substring(1).ToCharArray
     else Value := ReverseString(ARawData).ToCharArray;
 
@@ -140,12 +126,12 @@ begin
   result := (10-((3 * Odd + Even) mod 10)) mod 10;
 end;
 
-function TEAN13.GetRawData: string;
+function TEAN8.GetRawData: string;
 begin
   result := FRawData;
 end;
 
-function TEAN13.GetSVG: string;
+function TEAN8.GetSVG: string;
 var
   Item: char;
   LPath: string;
@@ -164,7 +150,12 @@ begin
   end;
 end;
 
-procedure TEAN13.SetRawData(const Value: string);
+function TEAN8.GetThickness(const Width: single): single;
+begin
+  result := Width * 1.2 / 56;
+end;
+
+procedure TEAN8.SetRawData(const Value: string);
 begin
   ValidateRawData(Value.Trim);
 
@@ -172,22 +163,22 @@ begin
   Encode;
 end;
 
-procedure TEAN13.ValidateRawData;
+procedure TEAN8.ValidateRawData(const Value: string);
 var
   Duck: int64;
 begin
-  if (Value.Length < 12) or (Value.Length > 13) then
-    raise EArgumentException.Create('EAN13: Length must be 12 or 13 digits');
+  if (Value.Length < 7) or (Value.Length > 8) then
+    raise EArgumentException.Create('EAN8: Length must be 7 or 8 digits');
 
   if not TryStrToInt64(Value, Duck) then
-    raise EArgumentException.Create('EAN13: Must contain only numbers');
+    raise EArgumentException.Create('EAN8: Must contain only numbers');
 
-  if Value.Length = 13 then
+  if Value.Length = 8 then
     if not CheckCRC(Value) then
-      raise EArgumentException.Create('CRC Error');
+      raise EArgumentException.Create('EAN8: CRC Error');
 end;
 
 initialization
-  TBarcode.RegisterBarcode(TBarcodeType.EAN13, TEAN13);
+  TBarcode.RegisterBarcode(TBarcodeType.EAN8, TEAN8);
 
 end.

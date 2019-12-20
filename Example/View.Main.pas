@@ -10,7 +10,7 @@ uses
   Common.Barcode;
 
 type
-  TForm1 = class(TForm)
+  TFormMain = class(TForm)
     EditRawData: TEdit;
     ButtonGenerateBarcode: TButton;
     PathBarcode: TPath;
@@ -23,6 +23,7 @@ type
     TextSVG: TText;
     procedure ButtonGenerateBarcodeClick(Sender: TObject);
     procedure PathBarcodeResize(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     FLastSelectedType: TBarcodeType;
@@ -32,13 +33,13 @@ type
   end;
 
 var
-  Form1: TForm1;
+  FormMain: TFormMain;
 
 implementation
 
 {$R *.fmx}
 
-procedure TForm1.ButtonGenerateBarcodeClick(Sender: TObject);
+procedure TFormMain.ButtonGenerateBarcodeClick(Sender: TObject);
 var
   Barcode: TBarcode;
 begin
@@ -54,12 +55,17 @@ begin
   end;
 end;
 
-procedure TForm1.PathBarcodeResize(Sender: TObject);
+procedure TFormMain.FormCreate(Sender: TObject);
+begin
+  FLastSelectedType := TBarcodeType.EAN8;
+end;
+
+procedure TFormMain.PathBarcodeResize(Sender: TObject);
 begin
   PathBarcode.Stroke.Thickness := TBarcode.Thickness(FLastSelectedType, PathBarcode.Width);
 end;
 
-function TForm1.SelectedBarcodeType: TBarcodeType;
+function TFormMain.SelectedBarcodeType: TBarcodeType;
 begin
   result := TBarcodeType(ComboBoxBarcodeType.ItemIndex);
 end;

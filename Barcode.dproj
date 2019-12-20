@@ -397,12 +397,13 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Example\View.Main.pas">
-            <Form>Form1</Form>
+            <Form>FormMain</Form>
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="source\Common.Barcode.pas"/>
         <DCCReference Include="source\Common.Barcode.IBarcode.pas"/>
         <DCCReference Include="source\Common.Barcode.EAN13.pas"/>
+        <DCCReference Include="source\Common.Barcode.EAN8.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
