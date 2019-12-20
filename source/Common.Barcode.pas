@@ -7,7 +7,7 @@ uses
  System.Generics.Collections;
 
 type
-  TBarcodeType = (EAN13);
+  TBarcodeType = (EAN8, EAN13);
 
   TBarcode = class
   private
