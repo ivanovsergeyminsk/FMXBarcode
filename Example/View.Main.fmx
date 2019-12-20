@@ -1,0 +1,108 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'FormMain'
+  ClientHeight = 440
+  ClientWidth = 867
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object LayoutTop: TLayout
+    Align = Top
+    Size.Width = 867.000000000000000000
+    Size.Height = 33.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object EditRawData: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Left
+      TabOrder = 0
+      Position.X = 235.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Size.Width = 216.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object ButtonGenerateBarcode: TButton
+      Align = Left
+      Margins.Left = 10.000000000000000000
+      Position.X = 461.000000000000000000
+      Size.Width = 160.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Generate Barcode'
+      OnClick = ButtonGenerateBarcodeClick
+    end
+    object ComboBoxBarcodeType: TComboBox
+      Align = Left
+      Items.Strings = (
+        'EAN13')
+      Size.Width = 225.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+    end
+  end
+  object LayoutClient: TLayout
+    Align = Client
+    Padding.Left = 20.000000000000000000
+    Padding.Top = 20.000000000000000000
+    Padding.Right = 20.000000000000000000
+    Padding.Bottom = 20.000000000000000000
+    Size.Width = 867.000000000000000000
+    Size.Height = 407.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object PathBarcode: TPath
+      Align = Client
+      Size.Width = 560.000000000000000000
+      Size.Height = 367.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Thickness = 5.000000000000000000
+      OnResize = PathBarcodeResize
+    end
+    object LayoutRight: TLayout
+      Align = Right
+      Position.X = 608.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 239.000000000000000000
+      Size.Height = 367.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object MemoSVGPathData: TMemo
+        Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+        DataDetectorTypes = []
+        TextSettings.WordWrap = True
+        Align = Client
+        Locked = True
+        Size.Width = 239.000000000000000000
+        Size.Height = 334.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Viewport.Width = 235.000000000000000000
+        Viewport.Height = 330.000000000000000000
+      end
+      object TextSVG: TText
+        Align = Top
+        Locked = True
+        Size.Width = 239.000000000000000000
+        Size.Height = 33.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'SVG Path Data:'
+      end
+    end
+    object SplitterRight: TSplitter
+      Align = Right
+      Cursor = crHSplit
+      MinSize = 20.000000000000000000
+      Margins.Left = 20.000000000000000000
+      Position.X = 600.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 8.000000000000000000
+      Size.Height = 367.000000000000000000
+      Size.PlatformDefault = False
+    end
+  end
+end

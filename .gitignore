@@ -1,0 +1,5 @@
+*.local
+/Win32/Debug/
+*.identcache
+*.res
+*.~*~
