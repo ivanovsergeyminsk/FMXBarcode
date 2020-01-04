@@ -407,6 +407,7 @@
         <DCCReference Include="source\EAN_UPC\Common.Barcode.UPC_A.pas"/>
         <DCCReference Include="source\Common.Barcode.Drawer.pas"/>
         <DCCReference Include="source\EAN_UPC\Common.Barcode.EAN.pas"/>
+        <DCCReference Include="source\EAN_UPC\Common.Barcode.UPC_E.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

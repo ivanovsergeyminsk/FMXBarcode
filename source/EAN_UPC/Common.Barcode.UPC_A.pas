@@ -22,7 +22,6 @@ uses
   System.SysUtils,
   System.StrUtils;
 
-
 { TUPC_A }
 
 procedure TUPC_A.EncodeL(var AEncodeData: string; const ARawData: string);
