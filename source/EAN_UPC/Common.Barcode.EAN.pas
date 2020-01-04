@@ -22,7 +22,7 @@ type
     SpecialGuardPattern = '010101';
     AddonGuardPattern   = '1011';
     AddonDelineatorPattern = '01';
-    AddonDelimiter = '000000';
+    AddonDelimiter = '0000000';
 
   strict private
     procedure ValidateRawAddon(const Value: string);
