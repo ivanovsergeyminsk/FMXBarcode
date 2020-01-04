@@ -12,7 +12,6 @@ type
    procedure SetRawData(const Value: string);
 
    function GetSVG: string;
-   function GetThickness(const Width: single): single;
 
    property RawData: string read GetRawData write SetRawData;
    property SVG: string read GetSVG;
