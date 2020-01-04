@@ -22,7 +22,6 @@ type
     SplitterRight: TSplitter;
     TextSVG: TText;
     procedure ButtonGenerateBarcodeClick(Sender: TObject);
-    procedure PathBarcodeResize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -58,11 +57,6 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   FLastSelectedType := TBarcodeType.EAN8;
-end;
-
-procedure TFormMain.PathBarcodeResize(Sender: TObject);
-begin
-  PathBarcode.Stroke.Thickness := TBarcode.Thickness(FLastSelectedType, PathBarcode.Width);
 end;
 
 function TFormMain.SelectedBarcodeType: TBarcodeType;

@@ -40,7 +40,8 @@ object FormMain: TFormMain
       Align = Left
       Items.Strings = (
         'EAN8'
-        'EAN13')
+        'EAN13'
+        'UPC-A')
       Size.Width = 225.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False
@@ -59,11 +60,18 @@ object FormMain: TFormMain
     TabOrder = 1
     object PathBarcode: TPath
       Align = Client
+      Data.Path = {
+        0E00000000000000C3F5A83E0000000001000000000000000000000001000000
+        000000000000803F01000000C3F5A83E0000803F03000000C3F5A83E00000000
+        00000000A4707D3F0000000001000000C2F5283F0000000001000000C2F5283F
+        0000803F01000000A4707D3F0000803F03000000A4707D3F0000000001000000
+        C2F5283F0000000001000000C2F5283F0000803F01000000A4707D3F0000803F
+        03000000A4707D3F00000000}
+      Fill.Color = claBlack
       Size.Width = 560.000000000000000000
       Size.Height = 367.000000000000000000
       Size.PlatformDefault = False
-      Stroke.Thickness = 5.000000000000000000
-      OnResize = PathBarcodeResize
+      Stroke.Kind = None
     end
     object LayoutRight: TLayout
       Align = Right

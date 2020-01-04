@@ -7,7 +7,7 @@ uses
  System.Generics.Collections;
 
 type
-  TBarcodeType = (EAN8, EAN13);
+  TBarcodeType = (EAN8, EAN13, UPC_A);
 
   TBarcode = class
   private
@@ -28,7 +28,10 @@ type
     function SVG: string;
 
     class procedure RegisterBarcode(const AType: TBarcodeType; const AImplementation: TClass);
-    class function Thickness(const AType: TBarcodeType; const PathWidth: single): single;
+  end;
+
+  TBarcodeTypeHelper = record helper for TBarcodeType
+    function ToString: string;
   end;
 
 implementation
@@ -54,18 +57,6 @@ function TBarcode.SVG: string;
 begin
 
   result := FBarcode.SVG;
-end;
-
-class function TBarcode.Thickness(const AType: TBarcodeType;
-  const PathWidth: single): single;
-var
-  LBarcode: IBarcode;
-begin
-  LBarcode := TBarcode.GetImplement(AType);
-  if LBarcode = nil then
-    raise Exception.Create('Barcode not implements.');
-  result := LBarcode.GetThickness(PathWidth);
-  LBarcode := nil;
 end;
 
 class constructor TBarcode.Create;
@@ -107,6 +98,18 @@ end;
 procedure TBarcode.SetRawData(const Value: string);
 begin
   FBarcode.RawData := Value;
+end;
+
+{ TBarcodeTypeHelper }
+
+function TBarcodeTypeHelper.ToString: string;
+begin
+  case self of
+    EAN8:   result := 'EAN8';
+    EAN13:  result := 'EAN13';
+    UPC_A:  result := 'UPC-A';
+    else    result := 'unknown';
+  end;
 end;
 
 end.
