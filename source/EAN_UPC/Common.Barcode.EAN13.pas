@@ -31,7 +31,7 @@ var
   Sequence: string;
   I: Integer;
 begin
-  Pattern := Patterns[string(ARawData[1]).ToInteger];
+  Pattern := PatternsEAN[string(ARawData[1]).ToInteger];
 
   for I := 1 to 6 do begin
     if Pattern[I] = 'A' then

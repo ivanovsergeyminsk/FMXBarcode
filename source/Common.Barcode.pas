@@ -7,7 +7,7 @@ uses
  System.Generics.Collections;
 
 type
-  TBarcodeType = (EAN8, EAN13, UPC_A);
+  TBarcodeType = (EAN8, EAN13, UPC_A, UPC_E);
 
   TBarcode = class
   private
@@ -108,6 +108,7 @@ begin
     EAN8:   result := 'EAN8';
     EAN13:  result := 'EAN13';
     UPC_A:  result := 'UPC-A';
+    UPC_E:  result := 'UPC-E';
     else    result := 'unknown';
   end;
 end;

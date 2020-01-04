@@ -41,7 +41,8 @@ object FormMain: TFormMain
       Items.Strings = (
         'EAN8'
         'EAN13'
-        'UPC-A')
+        'UPC-A'
+        'UPC-E')
       Size.Width = 225.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False

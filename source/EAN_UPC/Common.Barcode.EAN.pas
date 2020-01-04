@@ -9,9 +9,12 @@ uses
 type
   TEANCustom = class abstract(TInterfacedObject, IBarcode)
   protected const
-    Patterns:   array of string = ['AAAAAA',  'AABABB',  'AABBAB',  'AABBBA',  'ABAABB',  'ABBAAB',  'ABBBAA',  'ABABAB',  'ABABBA',  'ABBABA'];
-    SequencesA: array of string = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
-    SequencesB: array of string = ['0100111', '0110011', '0011011', '0100001', '0011101', '0111001', '0000101', '0010001', '0001001', '0010111'];
+    PatternsEAN: array of string = ['AAAAAA',  'AABABB',  'AABBAB',  'AABBBA',  'ABAABB',  'ABBAAB',  'ABBBAA',  'ABABAB',  'ABABBA',  'ABBABA'];
+    PatternsUPC: array of string = ['BBBAAA',  'BBABAA',  'BBAABA',  'BBAAAB',  'BABBAA',  'BAABBA',  'BAAABB',  'BABABA',  'BABAAB',  'BAABAB'];
+
+    SequencesA:  array of string = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
+    SequencesB:  array of string = ['0100111', '0110011', '0011011', '0100001', '0011101', '0111001', '0000101', '0010001', '0001001', '0010111'];
+
     NormalGuardPattern  = '101';
     CentreGuardPattern  = '01010';
     SpecialGuardPattern = '010101';

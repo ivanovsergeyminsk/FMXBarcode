@@ -10,7 +10,8 @@ uses
   Common.Barcode.EAN8 in 'source\EAN_UPC\Common.Barcode.EAN8.pas',
   Common.Barcode.UPC_A in 'source\EAN_UPC\Common.Barcode.UPC_A.pas',
   Common.Barcode.Drawer in 'source\Common.Barcode.Drawer.pas',
-  Common.Barcode.EAN in 'source\EAN_UPC\Common.Barcode.EAN.pas';
+  Common.Barcode.EAN in 'source\EAN_UPC\Common.Barcode.EAN.pas',
+  Common.Barcode.UPC_E in 'source\EAN_UPC\Common.Barcode.UPC_E.pas';
 
 {$R *.res}
 
