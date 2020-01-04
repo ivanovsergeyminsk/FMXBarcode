@@ -13,6 +13,7 @@ type
     function GetLength: integer; override;
     function GetType: TBarcodeType; override;
 
+    procedure Encode; override;
     procedure EncodeL(var AEncodeData: string; const ARawData: string); override;
     procedure EncodeR(var AEncodeData: string; const ARawData: string); override;
   end;
@@ -23,6 +24,12 @@ uses
   System.StrUtils;
 
 { TUPC_A }
+
+procedure TUPC_A.Encode;
+begin
+  inherited;
+  EncodeAddon(FEncodeData, FRawAddon);
+end;
 
 procedure TUPC_A.EncodeL(var AEncodeData: string; const ARawData: string);
 var

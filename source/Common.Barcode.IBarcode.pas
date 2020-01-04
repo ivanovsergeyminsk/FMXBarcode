@@ -11,9 +11,13 @@ type
    function GetRawData: string;
    procedure SetRawData(const Value: string);
 
+   function GetAddonData: string;
+   procedure SetAddonData(const Value: string);
+
    function GetSVG: string;
 
    property RawData: string read GetRawData write SetRawData;
+   property AddonData: string read GetAddonData write SetAddonData;
    property SVG: string read GetSVG;
   end;
 

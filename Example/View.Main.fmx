@@ -18,7 +18,7 @@ object FormMain: TFormMain
     object EditRawData: TEdit
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Align = Left
-      TabOrder = 0
+      TabOrder = 1
       Position.X = 235.000000000000000000
       Margins.Left = 10.000000000000000000
       Size.Width = 216.000000000000000000
@@ -28,11 +28,11 @@ object FormMain: TFormMain
     object ButtonGenerateBarcode: TButton
       Align = Left
       Margins.Left = 10.000000000000000000
-      Position.X = 461.000000000000000000
+      Position.X = 687.000000000000000000
       Size.Width = 160.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 1
+      TabOrder = 2
       Text = 'Generate Barcode'
       OnClick = ButtonGenerateBarcodeClick
     end
@@ -46,7 +46,17 @@ object FormMain: TFormMain
       Size.Width = 225.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 2
+      TabOrder = 3
+    end
+    object EditAddonData: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Left
+      TabOrder = 0
+      Position.X = 461.000000000000000000
+      Margins.Left = 10.000000000000000000
+      Size.Width = 216.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
     end
   end
   object LayoutClient: TLayout

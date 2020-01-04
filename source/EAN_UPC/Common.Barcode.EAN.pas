@@ -11,6 +11,8 @@ type
   protected const
     PatternsEAN: array of string = ['AAAAAA',  'AABABB',  'AABBAB',  'AABBBA',  'ABAABB',  'ABBAAB',  'ABBBAA',  'ABABAB',  'ABABBA',  'ABBABA'];
     PatternsUPC: array of string = ['BBBAAA',  'BBABAA',  'BBAABA',  'BBAAAB',  'BABBAA',  'BAABBA',  'BAAABB',  'BABABA',  'BABAAB',  'BAABAB'];
+    PatternsAddonTwo: array of string = ['AA', 'AB', 'BA', 'BB'];
+    PatternAddonFive: array of string = ['BBAAA', 'BABAA', 'BAABA', 'BAAAB', 'ABBAA', 'AABBA', 'AAABB', 'ABABA', 'ABAAB', 'AABAB'];
 
     SequencesA:  array of string = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
     SequencesB:  array of string = ['0100111', '0110011', '0011011', '0100001', '0011101', '0111001', '0000101', '0010001', '0001001', '0010111'];
@@ -19,10 +21,17 @@ type
     CentreGuardPattern  = '01010';
     SpecialGuardPattern = '010101';
     AddonGuardPattern   = '1011';
-    AddonDelineatorPattern = '11';
+    AddonDelineatorPattern = '01';
+    AddonDelimiter = '000000';
+
+  strict private
+    procedure ValidateRawAddon(const Value: string);
+    procedure EncodeAddonTwo(var AEncodeData: string; const ARawAddon: string);
+    procedure EncodeAddonFive(var AEncodeData: string; const ARawAddon: string);
   protected
     FEncodeData: string;
     FRawData: string;
+    FRawAddon: string;
 
     procedure ValidateRawData(const Value: string); virtual;
 
@@ -36,9 +45,14 @@ type
     procedure EncodeL(var AEncodeData: string; const ARawData: string); virtual;
     procedure EncodeR(var AEncodeData: string; const ARawData: string); virtual;
 
+    procedure EncodeAddon(var AEncodeData: string; const ARawAddon: string); virtual;
+
     //IBarcode
     function GetRawData: string;
     procedure SetRawData(const Value: string);
+
+    function GetAddonData: string;
+    procedure SetAddonData(const Value: string);
 
     function GetSVG: string;
   end;
@@ -52,6 +66,9 @@ resourcestring
   StrExceptionLength = '%s: Length must be %d or %d digits';
   StrExceptionNumbers = '%s: Must contain only numbers';
   StrExceptionCRC = '%s: CRC Error';
+
+  StrExceptionAddonLength = '%s: Addon Length must be %d or %d digits';
+  StrExceptionAddonNumbers = '%s: Addon Must contain only numbers';
 
 { TEANCustom }
 
@@ -87,6 +104,7 @@ begin
   CRC    := self.GetCRC(ARawData);
   result := RawCRC = CRC;
 end;
+
 procedure TEANCustom.Encode;
 begin
   FEncodeData := NormalGuardPattern;
@@ -94,6 +112,103 @@ begin
   FEncodeData := FEncodeData + CentreGuardPattern;
   EncodeR(FEncodeData, FRawData);
   FEncodeData := FEncodeData + NormalGuardPattern;
+end;
+
+procedure TEANCustom.EncodeAddon(var AEncodeData: string;
+   const ARawAddon: string);
+begin
+  if (ARawAddon.Length = 2) or (ARawAddon.Length = 5) then  begin
+    AEncodeData := AEncodeData + AddonDelimiter;
+
+    case ARawAddon.Length of
+      2: EncodeAddonTwo(AEncodeData,  ARawAddon);
+      5: EncodeAddonFive(AEncodeData, ARawAddon);
+    end;
+  end;
+end;
+
+procedure TEANCustom.EncodeAddonFive(var AEncodeData: string;
+  const ARawAddon: string);
+var
+  Pattern, Sequence: string;
+
+  Sequences: TArray<string>;
+  I: integer;
+
+  function GetIdx(const AAddon: string): integer;
+  var
+    Step1,
+    Step2,
+    Step3: integer;
+  begin
+    Step1 :=
+      AAddon.Substring(0,1).ToInteger +
+      AAddon.Substring(2,1).ToInteger +
+      AAddon.Substring(4,1).ToInteger;
+
+    Step1 := Step1 * 3;
+
+    Step2 :=
+      AAddon.Substring(1,1).ToInteger +
+      AAddon.Substring(3,1).ToInteger;
+
+    Step2 := Step2 * 9;
+    Step3 := Step1 + Step2;
+
+    result := Step3.ToString
+                   .Substring(Step3.ToString.Length-1).ToInteger;
+  end;
+
+begin
+  Pattern := PatternAddonFive[GetIdx(ARawAddon)];
+
+  AEncodeData := AEncodeData + AddonGuardPattern;
+  for I := 1 to 5 do begin
+    if Pattern[I] = 'A' then
+      Sequence := SequencesA[string(ARawAddon[I]).ToInteger]
+    else
+      Sequence := SequencesB[string(ARawAddon[I]).ToInteger];
+
+    Sequences := Sequences + [Sequence];
+  end;
+
+  AEncodeData := AEncodeData + string.Join(AddonDelineatorPattern, Sequences);
+end;
+
+procedure TEANCustom.EncodeAddonTwo(var AEncodeData: string;
+  const ARawAddon: string);
+var
+  Pattern, Sequence: string;
+  Sequences: TArray<string>;
+  I: integer;
+
+  function IsMultiple(const AValue, Multiple: integer): boolean;
+  begin
+    result := (AValue mod Multiple) = 0;
+  end;
+
+begin
+  AEncodeData := AEncodeData + AddonGuardPattern;
+
+  if (ARawAddon.ToInteger = 0) or IsMultiple(ARawAddon.ToInteger, 4) then
+    Pattern := PatternsAddonTwo[0]
+  else if (ARawAddon.ToInteger = 1) or IsMultiple(ARawAddon.ToInteger, 4+1) then
+    Pattern := PatternsAddonTwo[1]
+  else if (ARawAddon.ToInteger = 2) or IsMultiple(ARawAddon.ToInteger, 4+2) then
+    Pattern := PatternsAddonTwo[2]
+  else
+    Pattern := PatternsAddonTwo[3];
+
+  for I := 1 to 2 do begin
+    if Pattern[I] = 'A' then
+      Sequence := SequencesA[string(ARawAddon[I]).ToInteger]
+    else
+      Sequence := SequencesB[string(ARawAddon[I]).ToInteger];
+
+    Sequences := Sequences + [Sequence];
+  end;
+
+  AEncodeData := AEncodeData + string.Join(AddonDelineatorPattern, Sequences);
 end;
 
 procedure TEANCustom.EncodeL(var AEncodeData: string; const ARawData: string);
@@ -109,6 +224,35 @@ end;
 function TEANCustom.GetRawData: string;
 begin
   result := FRawData;
+end;
+
+function TEANCustom.GetAddonData: string;
+begin
+  result := FRawAddon;
+end;
+
+procedure TEANCustom.SetAddonData(const Value: string);
+begin
+  ValidateRawAddon(Value);
+  FRawAddon := Value;
+
+  Encode;
+end;
+
+procedure TEANCustom.ValidateRawAddon(const Value: string);
+var
+  Duck: int64;
+  BarType: TBarcodeType;
+begin
+  BarType   := GetType;
+
+  if Value.IsEmpty then exit;
+  
+  if not ((Value.Length = 2) or (Value.Length = 5)) then
+    raise EArgumentException.Create(format(StrExceptionAddonLength, [BarType.ToString, 2, 5]));
+
+  if not TryStrToInt64(Value, Duck) then
+    raise EArgumentException.Create(format(StrExceptionAddonNumbers, [BarType.ToString]));
 end;
 
 function TEANCustom.GetSVG: string;

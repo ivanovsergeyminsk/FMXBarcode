@@ -30,8 +30,9 @@ begin
   FEncodeData := NormalGuardPattern;
   EncodeL(FEncodeData, FRawData);
   FEncodeData := FEncodeData + SpecialGuardPattern;
-end;
 
+  EncodeAddon(FEncodeData, FRawAddon);
+end;
 
 procedure TUPC_E.EncodeL(var AEncodeData: string; const ARawData: string);
 var

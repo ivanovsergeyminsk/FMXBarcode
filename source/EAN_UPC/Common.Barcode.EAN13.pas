@@ -13,6 +13,7 @@ type
     function GetLength: integer; override;
     function GetType: TBarcodeType; override;
 
+    procedure Encode; override;
     procedure EncodeL(var AEncodeData: string; const ARawData: string); override;
     procedure EncodeR(var AEncodeData: string; const ARawData: string); override;
   end;
@@ -24,6 +25,12 @@ uses
   System.StrUtils;
 
 { TEAN13 }
+
+procedure TEAN13.Encode;
+begin
+  inherited;
+  EncodeAddon(FEncodeData, FRawAddon);
+end;
 
 procedure TEAN13.EncodeL(var AEncodeData: string; const ARawData: string);
 var
