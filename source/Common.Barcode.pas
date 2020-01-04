@@ -17,13 +17,17 @@ type
     class function GetImplement(const AType: TBarcodeType): IBarcode;
   private
     FBarcode: IBarcode;
-  function GetRawData: string;
-  procedure SetRawData(const Value: string);
+    function GetRawData: string;
+    procedure SetRawData(const Value: string);
+
+    function GetAddonData: string;
+    procedure SetAddonData(const Value: string);
   public
     constructor Create(const AType: TBarcodeType);
     destructor Destroy; override;
 
     property RawData: string read GetRawData write SetRawData;
+    property AddonData: string read GetAddonData write SetAddonData;
 
     function SVG: string;
 
@@ -69,6 +73,11 @@ begin
   TBarcode.Impementations.Free;
 end;
 
+function TBarcode.GetAddonData: string;
+begin
+  result := FBarcode.AddonData;
+end;
+
 class function TBarcode.GetImplement(const AType: TBarcodeType): IBarcode;
 var
   BarcodeClass: TClass;
@@ -93,6 +102,11 @@ class procedure TBarcode.RegisterBarcode(const AType: TBarcodeType;
 begin
   if Supports(AImplementation, IBarcode) then
     TBarcode.Impementations.AddOrSetValue(AType, AImplementation);
+end;
+
+procedure TBarcode.SetAddonData(const Value: string);
+begin
+  FBarcode.AddonData := Value;
 end;
 
 procedure TBarcode.SetRawData(const Value: string);

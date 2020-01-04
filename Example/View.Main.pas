@@ -21,6 +21,7 @@ type
     LayoutRight: TLayout;
     SplitterRight: TSplitter;
     TextSVG: TText;
+    EditAddonData: TEdit;
     procedure ButtonGenerateBarcodeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
@@ -45,7 +46,8 @@ begin
   FLastSelectedType := SelectedBarcodeType;
   Barcode := TBarcode.Create(FLastSelectedType);
   try
-    Barcode.RawData := EditRawData.Text;
+    Barcode.RawData   := EditRawData.Text;
+    Barcode.AddonData := EditAddonData.Text;
 
     PathBarcode.Data.Data := Barcode.SVG;
     MemoSVGPathData.Lines.Text := Barcode.SVG;
