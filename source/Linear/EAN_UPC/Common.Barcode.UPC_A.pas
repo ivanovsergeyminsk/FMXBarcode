@@ -66,10 +66,10 @@ end;
 
 function TUPC_A.GetType: TBarcodeType;
 begin
-  result := TBarcodeType.UPC_A;
+  result := TBarcodeType.UPCA;
 end;
 
 initialization
-  TBarcode.RegisterBarcode(TBarcodeType.UPC_A, TUPC_A);
+  TBarcode.RegisterBarcode(TBarcodeType.UPCA, TUPC_A);
 
 end.

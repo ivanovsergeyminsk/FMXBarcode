@@ -402,12 +402,13 @@
         </DCCReference>
         <DCCReference Include="source\Common.Barcode.pas"/>
         <DCCReference Include="source\Common.Barcode.IBarcode.pas"/>
-        <DCCReference Include="source\EAN_UPC\Common.Barcode.EAN13.pas"/>
-        <DCCReference Include="source\EAN_UPC\Common.Barcode.EAN8.pas"/>
-        <DCCReference Include="source\EAN_UPC\Common.Barcode.UPC_A.pas"/>
         <DCCReference Include="source\Common.Barcode.Drawer.pas"/>
-        <DCCReference Include="source\EAN_UPC\Common.Barcode.EAN.pas"/>
-        <DCCReference Include="source\EAN_UPC\Common.Barcode.UPC_E.pas"/>
+        <DCCReference Include="source\Linear\EAN_UPC\Common.Barcode.EAN.pas"/>
+        <DCCReference Include="source\Linear\EAN_UPC\Common.Barcode.EAN8.pas"/>
+        <DCCReference Include="source\Linear\EAN_UPC\Common.Barcode.EAN13.pas"/>
+        <DCCReference Include="source\Linear\EAN_UPC\Common.Barcode.UPC_A.pas"/>
+        <DCCReference Include="source\Linear\EAN_UPC\Common.Barcode.UPC_E.pas"/>
+        <DCCReference Include="source\Linear\Common.Barcode.ITF14.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
