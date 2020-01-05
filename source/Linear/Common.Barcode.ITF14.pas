@@ -12,11 +12,13 @@ type
     Patterns: array of string = ['00110',  '10001',  '01001',  '11000',  '00101',  '10100',  '01100',  '00011',  '10010',  '01010'];
     PatternStart = '1010';
     PatternStop  = '1101';
+    PatternSpace = '000000000000000000000000000000';
   protected
     function GetLength: integer; override;
     function GetType: TBarcodeType; override;
 
     procedure ValidateRawData(const Value: string); override;
+    procedure ValidateRawAddon(const Value: string); override;
 
     function GetCRC(const ARawData: string): integer; override;
 
@@ -39,9 +41,11 @@ resourcestring
 
 procedure TITF14.Encode;
 begin
-  FEncodeData := PatternStart;
+  FEncodeData := PatternSpace;
+  FEncodeData := FEncodeData + PatternStart;
   EncodeCenter(FEncodeData, FRawData);
   FEncodeData := FEncodeData + PatternStop;
+  FEncodeData := FEncodeData + PatternSpace;
 end;
 
 procedure TITF14.EncodeCenter(var AEncodeData: string; const ARawData: string);
@@ -109,6 +113,12 @@ end;
 function TITF14.GetType: TBarcodeType;
 begin
   result := TBarcodeType.ITF14;
+end;
+
+procedure TITF14.ValidateRawAddon(const Value: string);
+begin
+  inherited;
+
 end;
 
 procedure TITF14.ValidateRawData(const Value: string);
