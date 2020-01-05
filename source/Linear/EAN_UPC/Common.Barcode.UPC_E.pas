@@ -59,10 +59,10 @@ end;
 
 function TUPC_E.GetType: TBarcodeType;
 begin
-  result := TBarcodeType.UPC_E;
+  result := TBarcodeType.UPCE;
 end;
 
 initialization
-  TBarcode.RegisterBarcode(TBarcodeType.UPC_E, TUPC_E);
+  TBarcode.RegisterBarcode(TBarcodeType.UPCE, TUPC_E);
 
 end.

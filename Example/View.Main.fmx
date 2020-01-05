@@ -42,7 +42,8 @@ object FormMain: TFormMain
         'EAN8'
         'EAN13'
         'UPC-A'
-        'UPC-E')
+        'UPC-E'
+        'ITF-14')
       Size.Width = 225.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False

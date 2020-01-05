@@ -4,10 +4,10 @@ interface
 uses
  Common.Barcode.IBarcode,
  FMX.Objects,
- System.Generics.Collections;
+ System.Generics.Collections, Common.Barcode.Drawer;
 
 type
-  TBarcodeType = (EAN8, EAN13, UPC_A, UPC_E);
+  TBarcodeType = (EAN8, EAN13, UPCA, UPCE, ITF14);
 
   TBarcode = class
   private
@@ -36,6 +36,33 @@ type
 
   TBarcodeTypeHelper = record helper for TBarcodeType
     function ToString: string;
+  end;
+
+  TBarcodeCustom = class abstract(TInterfacedObject, IBarcode)
+  protected
+    FEncodeData: string;
+    FRawData: string;
+    FRawAddon: string;
+
+    function GetLength: integer; virtual; abstract;
+    function GetType: TBarcodeType; virtual; abstract;
+
+   procedure ValidateRawAddon(const Value: string); virtual; abstract;
+   procedure ValidateRawData(const Value: string); virtual; abstract;
+
+    function GetCRC(const ARawData: string): integer; virtual; abstract;
+    function CheckCRC(const ARawData: string): boolean; virtual;
+
+   procedure Encode; virtual; abstract;
+
+    //IBarcode
+   function GetRawData: string;
+   procedure SetRawData(const Value: string);
+
+   function GetAddonData: string;
+   procedure SetAddonData(const Value: string);
+
+   function GetSVG: string; virtual;
   end;
 
 implementation
@@ -121,10 +148,57 @@ begin
   case self of
     EAN8:   result := 'EAN8';
     EAN13:  result := 'EAN13';
-    UPC_A:  result := 'UPC-A';
-    UPC_E:  result := 'UPC-E';
+    UPCA:   result := 'UPC-A';
+    UPCE:   result := 'UPC-E';
+    ITF14:  result := 'ITF-14';
     else    result := 'unknown';
   end;
+end;
+
+{ TBarcodeCustom }
+
+function TBarcodeCustom.CheckCRC(const ARawData: string): boolean;
+var
+  RawCRC: integer;
+  CRC: integer;
+begin
+  RawCRC := int32.Parse(string(ARawData[ARawData.Length]));
+  CRC    := self.GetCRC(ARawData);
+  result := RawCRC = CRC;
+end;
+
+function TBarcodeCustom.GetAddonData: string;
+begin
+  result := FRawAddon;
+end;
+
+function TBarcodeCustom.GetRawData: string;
+begin
+  result := FRawData;
+end;
+
+function TBarcodeCustom.GetSVG: string;
+var
+  Drawer: IBarcodeDrawer;
+begin
+  Drawer := TBarcodeDrawer.Create;
+  result := Drawer.SVG(FEncodeData);
+end;
+
+procedure TBarcodeCustom.SetAddonData(const Value: string);
+begin
+  ValidateRawAddon(Value);
+  FRawAddon := Value;
+
+  Encode;
+end;
+
+procedure TBarcodeCustom.SetRawData(const Value: string);
+begin
+  ValidateRawData(Value.Trim);
+
+  FRawData := Value.Trim;
+  Encode;
 end;
 
 end.
