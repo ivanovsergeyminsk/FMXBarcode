@@ -24,6 +24,7 @@ object FormMain: TFormMain
       Size.Width = 216.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False
+      OnKeyDown = EditRawDataKeyDown
     end
     object ButtonGenerateBarcode: TButton
       Align = Left

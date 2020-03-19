@@ -11,34 +11,44 @@ type
   protected const
 
     PatternCode128: array of string =
-      ['11011001100', '11001101100', '11001100110', '10010011000', '10010001100',
-       '10001001100', '10011001000', '10011000100', '10001100100', '11001001000',
-       '11001000100', '11000100100', '10110011100', '10011011100', '10011001110',
-       '10111001100', '10011101100', '10011100110', '11001110010', '11001011100',
-       '11001001110', '11011100100', '11001110100', '11101101110', '11101001100',
-       '11100101100', '11100100110', '11101100100', '11100110100', '11100110010',
-       '11011011000', '11011000110', '11000110110', '10100011000', '10001011000',
-       '10001000110', '10110001000', '10001101000', '10001100010', '11010001000',
-       '11000101000', '11000100010', '10110111000', '10110001110', '10001101110',
-       '10111011000', '10111000110', '10001110110', '11101110110', '11010001110',
-       '11000101110', '11011101000', '11011100010', '11011101110', '11101011000',
-       '11101000110', '11100010110', '11101101000', '11101100010', '11100011010',
-       '11101111010', '11001000010', '11110001010', '10100110000', '10100001100',
-       '10010110000', '10010000110', '10000101100', '10000100110', '10110010000',
-       '10110000100', '10011010000', '10011000010', '10000110100', '10000110010',
-       '11000010010', '11001010000', '11110111010', '11000010100', '10001111010',
-       '10100111100', '10010111100', '10010011110', '10111100100', '10011110100',
-       '10011110010', '11110100100', '11110010100', '11110010010', '11011011110',
-       '11011110110', '11110110110', '10101111000', '10100011110', '10001011110',
-       '10111101000', '10111100010', '11110101000', '11110100010', '10111011110',
-       '10111101110', '11101011110', '11110101110', '11010000100', '11010010000',
-       '11010011100'];
+      ['11011001100', '11001101100', '11001100110', '10010011000', '10010001100',  //000-004
+       '10001001100', '10011001000', '10011000100', '10001100100', '11001001000',  //005-009
+       '11001000100', '11000100100', '10110011100', '10011011100', '10011001110',  //010-014
+       '10111001100', '10011101100', '10011100110', '11001110010', '11001011100',  //015-019
+       '11001001110', '11011100100', '11001110100', '11101101110', '11101001100',  //020-024
+       '11100101100', '11100100110', '11101100100', '11100110100', '11100110010',  //025-029
+       '11011011000', '11011000110', '11000110110', '10100011000', '10001011000',  //030-034
+       '10001000110', '10110001000', '10001101000', '10001100010', '11010001000',  //035-039
+       '11000101000', '11000100010', '10110111000', '10110001110', '10001101110',  //040-044
+       '10111011000', '10111000110', '10001110110', '11101110110', '11010001110',  //045-049
+       '11000101110', '11011101000', '11011100010', '11011101110', '11101011000',  //050-054
+       '11101000110', '11100010110', '11101101000', '11101100010', '11100011010',  //055-059
+       '11101111010', '11001000010', '11110001010', '10100110000', '10100001100',  //060-064
+       '10010110000', '10010000110', '10000101100', '10000100110', '10110010000',  //065-069
+       '10110000100', '10011010000', '10011000010', '10000110100', '10000110010',  //070-074
+       '11000010010', '11001010000', '11110111010', '11000010100', '10001111010',  //075-079
+       '10100111100', '10010111100', '10010011110', '10111100100', '10011110100',  //080-084
+       '10011110010', '11110100100', '11110010100', '11110010010', '11011011110',  //085-089
+       '11011110110', '11110110110', '10101111000', '10100011110', '10001011110',  //090-094
+       '10111101000', '10111100010', '11110101000', '11110100010', '10111011110',  //095-099
+       '10111101110', '11101011110', '11110101110', '11010000100', '11010010000',  //100-104
+       '11010011100'];                                                             //105
     PatternStop = '1100011101011';
     QuietZone   = '0000000000000';
 
+    REGEX_NUMBER = '^[\d]+';
+    REGEX_NOT_NUMBER = '^[\D]+';
   protected type
     TPatternCode = (CodeA, CodeB, CodeC);
   protected
+    function GetLength: integer; override;
+    function GetType: TBarcodeType; override;
+    procedure ValidateRawData(const Value: string); override;
+    procedure ValidateRawAddon(const Value: string); override;
+    function GetCRC(const ARawData: string): integer; override;
+
+    procedure Encode; override;
+
     function PatternStartA: byte; inline;
     function PatternStartB: byte; inline;
     function PatternStartC: byte; inline;
@@ -50,33 +60,30 @@ type
     function PatternFNC2(const CurrentCode: TPatternCode): byte; inline;
     function PatternFNC3(const CurrentCode: TPatternCode): byte; inline;
     function PatternFNC4(const CurrentCode: TPatternCode): byte; inline;
+    function ValueCodeB(AChar: Char): byte; inline;
 
     function GetPatternCode(AChar: AnsiChar): TPatternCode;
 
-    function GetLength: integer; override;
-    function GetType: TBarcodeType; override;
+    procedure EncodePatternStart(var Result: TArray<byte>; LRawData: string; var CurrentCode: TPatternCode);
+    procedure EncodeDigits(var Result: TArray<byte>; var CurrentCode: TPatternCode; var LChunkData: string);
+    procedure EncodeDigitsAfterSymbols(var Result: TArray<byte>; var CurrentCode: TPatternCode; var LChunkData: string; ChunkLength: Integer);
+    procedure EncodeSymbols(var Result: TArray<byte>; var CurrentCode: TPatternCode; var LChunkData: string);
 
-    procedure ValidateRawData(const Value: string); override;
-    procedure ValidateRawAddon(const Value: string); override;
-
-    function GetCRC(const ARawData: string): integer; override;
-
-    procedure Encode; override;
     function EncodeRaw(ARawData: string): string;
     function EncodeRawByte(ARawData: string): TArray<byte>;
     function GetSymbolCheck(ARawByte: TArray<byte>): byte;
   end;
 implementation
 uses
-  System.SysUtils, System.Math;
+  System.SysUtils, System.Math, System.RegularExpressions;
 
 { TGS128 }
 
 function TGS128.PatternCodeA(const CurrentCode: TPatternCode): byte;
 begin
   case CurrentCode of
-    CodeB: result := 100;
-    CodeC: result := 99;
+    CodeB: result := 101;
+    CodeC: result := 101;
     else raise Exception.Create('GS128. PatternCodeA.');
   end;
 end;
@@ -84,8 +91,8 @@ end;
 function TGS128.PatternCodeB(const CurrentCode: TPatternCode): byte;
 begin
   case CurrentCode of
-    CodeA: result := 101;
-    CodeC: result := 99;
+    CodeA: result := 100;
+    CodeC: result := 100;
     else raise Exception.Create('GS128. PatternCodeB.');
   end;
 end;
@@ -93,8 +100,8 @@ end;
 function TGS128.PatternCodeC(const CurrentCode: TPatternCode): byte;
 begin
   case CurrentCode of
-    CodeA: result := 101;
-    CodeB: result := 100;
+    CodeA: result := 99;
+    CodeB: result := 99;
     else raise Exception.Create('GS128. PatternCodeC.');
   end;
 end;
@@ -172,48 +179,41 @@ begin
     result := result + PatternCode128[chValue];
 end;
 
+function TGS128.ValueCodeB(AChar: Char): byte;
+begin
+  result := ord(AnsiChar(AChar))-32;
+end;
+
 function TGS128.EncodeRawByte(ARawData: string): TArray<byte>;
 var
-  CurrentCode, NewCode: TPatternCode;
-  AnsiRawData: AnsiString;
-  Ch: AnsiChar;
-  ChCode: integer;
-  ChCheck: integer;
+  CurrentCode: TPatternCode;
+  LRawData, LChunkData: string;
+  ChunkLength: integer;
 begin  
   result := [];
  if ARawData.IsEmpty then exit;
-  AnsiRawData := AnsiString(ARawData);
+  LRawData := ARawData;
 
-  currentCode := GetPatternCode(AnsiRawData[1]);
+  EncodePatternStart(Result, LRawData, CurrentCode);
 
-  case CurrentCode of
-    CodeA: result := result + [PatternStartA];
-    CodeB: result := result + [PatternStartB];
+  while LRawData.Length > 0 do begin
+    if TRegEx.IsMatch(LRawData, REGEX_NUMBER) then begin
+      LChunkData  := TRegEx.Match(LRawData, REGEX_NUMBER).Value;
+      ChunkLength := LChunkData.Length;
+      EncodeDigitsAfterSymbols(Result, CurrentCode, LChunkData, ChunkLength);
+      EncodeDigits(Result, CurrentCode, LChunkData);
+
+      LRawData := LRawData.Remove(0, ChunkLength);
+    end else
+    if TRegEx.IsMatch(LRawData, REGEX_NOT_NUMBER) then begin
+      LChunkData  := TRegEx.Match(LRawData, REGEX_NOT_NUMBER).Value;
+      ChunkLength := LChunkData.Length;
+      EncodeSymbols(Result, CurrentCode, LChunkData);
+      LRawData := LRawData.Remove(0, ChunkLength);
+    end;
   end;
 
-  result := result + [PatternFNC1(CurrentCode)];
-
-  for Ch in AnsiRawData do begin
-    ChCode := 0;
-    NewCode := GetPatternCode(Ch);
-    if CurrentCode <> NewCode then begin
-      case NewCode of
-        CodeA: result := result + [PatternCodeA(CurrentCode)];
-        CodeB: result := result + [PatternCodeB(CurrentCode)];
-      end;
-      CurrentCode := NewCode;
-    end;
-
-    case CurrentCode of
-      CodeA:  ChCode := ifthen(ord(Ch) < 32, ord(ch)+64, ord(ch)-32);
-      CodeB:  ChCode := ord(Ch)-32;
-    end;
-
-    result := result + [ChCode];
-  end;
-
-  ChCheck := GetSymbolCheck(result);
-  result := result + [ChCheck];
+  result := result + [GetSymbolCheck(result)];
 end;
 
 function TGS128.GetSymbolCheck(ARawByte: TArray<byte>): byte;
@@ -226,6 +226,80 @@ begin
     SymbolCheck := SymbolCheck + ARawByte[I]*I;
 
   result := SymbolCheck mod 103;
+end;
+
+procedure TGS128.EncodeSymbols(var Result: TArray<byte>; var CurrentCode: TPatternCode; var LChunkData: string);
+begin
+  if CurrentCode <> TPatternCode.CodeB then
+  begin
+    result := result + [PatternCodeB(CurrentCode)];
+    CurrentCode := TPatternCode.CodeB;
+  end;
+
+  while LChunkData.Length > 0 do
+  begin
+    result := result + [ValueCodeB(LChunkData[1])];
+    LChunkData := LChunkData.Remove(0, 1);
+  end;
+end;
+
+procedure TGS128.EncodeDigits(var Result: TArray<byte>; var CurrentCode: TPatternCode; var LChunkData: string);
+begin
+  while LChunkData.Length > 0 do
+  begin
+    if LChunkData.Length > 1 then
+    begin
+      result := result + [LChunkData.Substring(0, 2).ToInteger];
+      LChunkData := LChunkData.Remove(0, 2);
+    end
+    else
+    begin
+      result := result + [PatternCodeB(CurrentCode)];
+      result := result + [ValueCodeB(LChunkData[1])];
+      LChunkData := LChunkData.Remove(0, 1);
+      CurrentCode := TPatternCode.CodeB;
+    end;
+  end;
+end;
+
+procedure TGS128.EncodeDigitsAfterSymbols(var Result: TArray<byte>; var CurrentCode: TPatternCode; var LChunkData: string; ChunkLength: Integer);
+begin
+  if CurrentCode = TPatternCode.CodeB then
+  begin
+    if ChunkLength >= 4 then
+    begin
+      if odd(LChunkData.Length) then
+      begin
+        result := result + [ValueCodeB(LChunkData[1])];
+        LChunkData := LChunkData.Remove(0, 1);
+      end;
+      result := result + [PatternCodeC(CurrentCode)];
+      CurrentCode := TPatternCode.CodeC;
+    end
+    else
+    begin
+      while LChunkData.Length > 0 do
+      begin
+        result := result + [ValueCodeB(LChunkData[1])];
+        LChunkData := LChunkData.Remove(0, 1);
+      end;
+    end;
+  end;
+end;
+
+procedure TGS128.EncodePatternStart(var Result: TArray<byte>; LRawData: string; var CurrentCode: TPatternCode);
+begin
+  if TRegEx.IsMatch(LRawData, REGEX_NUMBER) then
+  begin
+    currentCode := TPatternCode.CodeC;
+    result := result + [PatternStartC];
+  end
+  else
+  begin
+    currentCode := TPatternCode.CodeB;
+    result := result + [PatternStartB];
+  end;
+  result := result + [PatternFNC1(CurrentCode)];
 end;
 
 function TGS128.GetCRC(const ARawData: string): integer;
