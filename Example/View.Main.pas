@@ -24,6 +24,8 @@ type
     EditAddonData: TEdit;
     procedure ButtonGenerateBarcodeClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure EditRawDataKeyDown(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
   private
     { Private declarations }
     FLastSelectedType: TBarcodeType;
@@ -54,6 +56,14 @@ begin
   finally
     Barcode.Free;
   end;
+end;
+
+procedure TFormMain.EditRawDataKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = 13 then
+    ButtonGenerateBarcodeClick(ButtonGenerateBarcode);
+
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);

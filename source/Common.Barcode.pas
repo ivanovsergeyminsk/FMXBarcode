@@ -7,7 +7,7 @@ uses
  System.Generics.Collections, Common.Barcode.Drawer;
 
 type
-  TBarcodeType = (EAN8, EAN13, UPCA, UPCE, ITF14);
+  TBarcodeType = (EAN8, EAN13, UPCA, UPCE, ITF14, GS128);
 
   TBarcode = class
   private
@@ -151,6 +151,7 @@ begin
     UPCA:   result := 'UPC-A';
     UPCE:   result := 'UPC-E';
     ITF14:  result := 'ITF-14';
+    GS128:  result := 'GS-128';
     else    result := 'unknown';
   end;
 end;

@@ -12,7 +12,8 @@ uses
   Common.Barcode.EAN13 in 'source\Linear\EAN_UPC\Common.Barcode.EAN13.pas',
   Common.Barcode.UPC_A in 'source\Linear\EAN_UPC\Common.Barcode.UPC_A.pas',
   Common.Barcode.UPC_E in 'source\Linear\EAN_UPC\Common.Barcode.UPC_E.pas',
-  Common.Barcode.ITF14 in 'source\Linear\Common.Barcode.ITF14.pas';
+  Common.Barcode.ITF14 in 'source\Linear\Common.Barcode.ITF14.pas',
+  Common.Barcode.GS128 in 'source\Linear\Common.Barcode.GS128.pas';
 
 {$R *.res}
 
