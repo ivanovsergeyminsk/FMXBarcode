@@ -15,6 +15,9 @@ Generates a barcode image as svg-path (TPath.Data)
 |                 | DotCode     | :x: (future)       |
 | Composite       |             | :x: (future)       |
 
+![EAN8](/Example/screens/BarcodeExample_EAN8.png) 
+![EAN8](/Example/screens/BarcodeExample_GS128.png)
+
 # Using
 Add the module:
 ```pascal
