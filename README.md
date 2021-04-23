@@ -25,27 +25,19 @@ uses
 Get svg-path:
 ```pascal
 var
-  Barcode: TBarcode;
   SVGString: string;
 begin
-  Barcode := TBarcode.Create(TBarcodeType.EAN8);
-  try
-    Barcode.RawData := '12345678';
-    SVGString := Barcode.SVG;
-  finally
-    Barcode.Free;
-  end;
+  SVGString := TBarcode.SVG(TBarcodeType.EAN8, '1234567');
 end;
 ```
 
 You can display the barcode through the TPath component: 
 ```pascal
 var
- Barcode: TBarcode;
  DisplayBarcode: TPath;
 begin
 //...
-  DisplayBarcode.Data.Data := Barcode.SVG;
+  DisplayBarcode.Data.Data := TBarcode.SVG(TBarcodeType.EAN8, '1234567');
 //...
 end;
 ```
