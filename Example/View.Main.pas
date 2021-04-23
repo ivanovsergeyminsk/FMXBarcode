@@ -7,7 +7,7 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.Edit, FMX.Objects, FMX.ScrollBox, FMX.Memo,
   FMX.Layouts, FMX.ListBox,
-  Common.Barcode;
+  Common.Barcode, FMX.Memo.Types;
 
 type
   TFormMain = class(TForm)
@@ -43,19 +43,13 @@ implementation
 
 procedure TFormMain.ButtonGenerateBarcodeClick(Sender: TObject);
 var
-  Barcode: TBarcode;
+  SVGString: string;
 begin
   FLastSelectedType := SelectedBarcodeType;
-  Barcode := TBarcode.Create(FLastSelectedType);
-  try
-    Barcode.RawData   := EditRawData.Text;
-    Barcode.AddonData := EditAddonData.Text;
+  SVGString := TBarcode.SVG(FLastSelectedType, EditRawData.Text, EditAddonData.Text);
 
-    PathBarcode.Data.Data := Barcode.SVG;
-    MemoSVGPathData.Lines.Text := Barcode.SVG;
-  finally
-    Barcode.Free;
-  end;
+  PathBarcode.Data.Data       := SVGString;
+  MemoSVGPathData.Lines.Text  := SVGString;
 end;
 
 procedure TFormMain.EditRawDataKeyDown(Sender: TObject; var Key: Word;

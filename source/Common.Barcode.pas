@@ -29,8 +29,11 @@ type
     property RawData: string read GetRawData write SetRawData;
     property AddonData: string read GetAddonData write SetAddonData;
 
-    function SVG: string;
+    function SVG: string; overload;
 
+
+    class function SVG(AType: TBarcodeType; RawData: string): string; overload; static;
+    class function SVG(AType: TBarcodeType; RawData, AddonData: string): string; overload; static;
     class procedure RegisterBarcode(const AType: TBarcodeType; const AImplementation: TClass);
   end;
 
@@ -139,6 +142,26 @@ end;
 procedure TBarcode.SetRawData(const Value: string);
 begin
   FBarcode.RawData := Value;
+end;
+
+class function TBarcode.SVG(AType: TBarcodeType; RawData,
+  AddonData: string): string;
+var
+  Barcode: TBarcode;
+begin
+  Barcode := TBarcode.Create(AType);
+  try
+    Barcode.RawData   := RawData;
+    Barcode.AddonData := AddonData;
+    result := Barcode.SVG;
+  finally
+    Barcode.Free;
+  end;
+end;
+
+class function TBarcode.SVG(AType: TBarcodeType; RawData: string): string;
+begin
+  result := TBarcode.SVG(AType, RawData, string.Empty);
 end;
 
 { TBarcodeTypeHelper }

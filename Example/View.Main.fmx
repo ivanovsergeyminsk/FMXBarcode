@@ -1,7 +1,7 @@
 object FormMain: TFormMain
   Left = 0
   Top = 0
-  Caption = 'FormMain'
+  Caption = 'Barcode Example'
   ClientHeight = 440
   ClientWidth = 867
   FormFactor.Width = 320
