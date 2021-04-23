@@ -14,3 +14,38 @@ Generates a barcode image as svg-path (TPath.Data)
 |                 | QR Code     | :x: (future)       |
 |                 | DotCode     | :x: (future)       |
 | Composite       |             | :x: (future)       |
+
+# Using
+Add the module:
+```pascal
+uses
+ Common.Barcode;
+```
+
+Get svg-path:
+```pascal
+var
+  Barcode: TBarcode;
+  SVGString: string;
+begin
+  Barcode := TBarcode.Create(TBarcodeType.EAN8);
+  try
+    Barcode.RawData := '12345678';
+    SVGString := Barcode.SVG;
+  finally
+    Barcode.Free;
+  end;
+end;
+```
+
+You can display the barcode through the TPath component: 
+```pascal
+var
+ Barcode: TBarcode;
+ DisplayBarcode: TPath;
+begin
+//...
+  DisplayBarcode.Data.Data := Barcode.SVG;
+//...
+end;
+```
