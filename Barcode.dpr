@@ -1,5 +1,4 @@
 program Barcode;
-
 uses
   System.StartUpCopy,
   FMX.Forms,
@@ -13,10 +12,10 @@ uses
   Common.Barcode.UPC_A in 'source\Linear\EAN_UPC\Common.Barcode.UPC_A.pas',
   Common.Barcode.UPC_E in 'source\Linear\EAN_UPC\Common.Barcode.UPC_E.pas',
   Common.Barcode.ITF14 in 'source\Linear\Common.Barcode.ITF14.pas',
-  Common.Barcode.GS128 in 'source\Linear\Common.Barcode.GS128.pas';
+  Common.Barcode.GS128 in 'source\Linear\Common.Barcode.GS128.pas',
+  Common.Barcode.Code128 in 'source\Linear\Common.Barcode.Code128.pas';
 
 {$R *.res}
-
 begin
   Application.Initialize;
   Application.CreateForm(TFormMain, FormMain);
