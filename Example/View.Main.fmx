@@ -45,7 +45,8 @@ object FormMain: TFormMain
         'UPC-A'
         'UPC-E'
         'ITF-14'
-        'GS-128')
+        'GS-128'
+        'Code-128')
       Size.Width = 225.000000000000000000
       Size.Height = 33.000000000000000000
       Size.PlatformDefault = False

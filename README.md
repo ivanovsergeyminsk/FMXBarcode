@@ -8,6 +8,7 @@ Generates a barcode image as svg-path (TPath.Data)
 |                 | UPC-A       | :white_check_mark: |
 |                 | UPC-E       | :white_check_mark: |
 |                 | ITF-14      | :white_check_mark: |
+|                 | Code-128    | :white_check_mark: |  
 |                 | GS-128      | :white_check_mark: |
 |                 | Databar     | :x: (future)       |
 | Two dimensioanl | DataMatrix  | :x: (future)       |
@@ -40,7 +41,7 @@ var
  DisplayBarcode: TPath;
 begin
 //...
-  DisplayBarcode.Data.Data := TBarcode.SVG(TBarcodeType.EAN8, '1234567');
+  DisplayBarcode.Data.Data := TBarcode.SVG(TBarcodeType.Code128, 'User:1234567');
 //...
 end;
 ```
